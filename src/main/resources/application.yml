@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  datasource:
+    url: jdbc:postgresql://109.234.35.103:5432/database?serverTimeZone=UTC
+    username: user
+    password: password
+  liquibase:
+    change-log: classpath:liquibase/db.changelog-master.xml
+    url: jdbc:postgresql://109.234.35.103:5432/database?serverTimeZone=UTC
+    user: user
+    password: password
+authentication:
+  tokenExpiration: 36000000
