@@ -20,33 +20,30 @@ import java.util.Set;
 @Service
 @Slf4j
 public class UserService implements UserDetailsService {
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder) {
+                       BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public User register(User user) {
+    public User create(User user) {
+        log.info("IN CREATE:" + user);
         Role roleUser = roleRepository.findByName("ROLE_USER");
         Set<Role> roleList = new HashSet<>();
         roleList.add(roleUser);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(roleList);
         user.setStatus(Status.ACTIVE);
         User registeredUser = userRepository.save(user);
         log.info("IN REGISTER - user: {} successfully registered", registeredUser);
         return registeredUser;
-    }
-
-    public List<User> findAll() {
-        List<User> result = userRepository.findAll();
-        log.info("IN FINDALL - users: {} found", result.size());
-        return result;
     }
 
     public User findByUserName(String username) {
@@ -55,15 +52,21 @@ public class UserService implements UserDetailsService {
         return result;
     }
 
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+        log.info("IN deleteById - user with: {} successfully deleted", id);
+    }
+
+    public List<User> findAll() {
+        List<User> result = userRepository.findAll();
+        log.info("IN FINDALL - users: {} found", result.size());
+        return result;
+    }
+
     public User findById(Long id) {
         User result = userRepository.findById(id).orElse(null);
         log.info("IN findById - user: {} found", result);
         return result;
-    }
-
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
-        log.info("IN deleteById - user with: {} successfully deleted", id);
     }
 
     @Override

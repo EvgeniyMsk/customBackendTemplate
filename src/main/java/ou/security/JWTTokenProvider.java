@@ -3,6 +3,7 @@ package ou.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -17,8 +18,6 @@ import java.util.*;
 @Component
 @PropertySource("classpath:/application.yml")
 public class JWTTokenProvider {
-    @Value("${authentication.secret}")
-    private String secret;
     @Value("${authentication.tokenExpiration}")
     private Long JWT_TOKEN_EXPIRATION = 36000000L;
 
@@ -57,7 +56,7 @@ public class JWTTokenProvider {
         }catch (MalformedJwtException |
                 ExpiredJwtException |
                 UnsupportedJwtException |
-                IllegalArgumentException ex) {
+                IllegalArgumentException | SignatureException exception) {
             return false;
         }
     }

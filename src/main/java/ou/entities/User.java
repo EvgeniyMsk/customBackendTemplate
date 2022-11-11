@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ou.validators.ValidUsernameConstraint;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Data
 public class User extends BaseEntity implements UserDetails {
     @Column(name = "username")
+    @ValidUsernameConstraint
     private String userName;
     private String firstName;
     private String lastName;
