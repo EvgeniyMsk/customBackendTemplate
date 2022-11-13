@@ -35,7 +35,7 @@ public class AuthController {
     @PostMapping("/signUp")
     public ResponseEntity<Object> signUp(@Valid @RequestBody User user, BindingResult bindingResult) {
         if (!bindingResult.hasErrors())
-            return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
+            return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
         return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
     }
 
