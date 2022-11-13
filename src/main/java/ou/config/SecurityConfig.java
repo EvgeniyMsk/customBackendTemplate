@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/api/auth/signIn", "/api/auth/signUp").permitAll()
-                .antMatchers("/api/users/**").hasRole("ADMIN")
+                .antMatchers("/api/users/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

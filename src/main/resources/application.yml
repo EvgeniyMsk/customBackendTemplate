@@ -14,3 +14,11 @@ spring:
     password: password
 authentication:
   tokenExpiration: 36000000
+server:
+#  ssl:
+#    key-store: classpath:SSL-cert/tutorial.jks
+#    key-store-type: pkcs12
+#    key-store-password: password
+#    key-password: password
+#    key-alias: tutorial
+  port: 443
