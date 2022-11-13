@@ -9,6 +9,6 @@ public class LoginRequest {
     public LoginRequest() {
     }
 
-    private String username;
+    private String userName;
     private String password;
 }

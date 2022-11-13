@@ -19,7 +19,7 @@ import java.util.*;
 @PropertySource("classpath:/application.yml")
 public class JWTTokenProvider {
     @Value("${authentication.tokenExpiration}")
-    private Long JWT_TOKEN_EXPIRATION = 36000000L;
+    private Long JWT_TOKEN_EXPIRATION;
 
     private final KeyPair keys = Keys.keyPairFor(SignatureAlgorithm.RS512);
 

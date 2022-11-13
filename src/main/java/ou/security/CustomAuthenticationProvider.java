@@ -1,21 +1,26 @@
 package ou.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import ou.entities.User;
 import ou.services.UserService;
 
 @Component
+@Slf4j
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public CustomAuthenticationProvider(UserService userService) {
+    public CustomAuthenticationProvider(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -24,7 +29,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
         User user = userService.findByUserName(username);
-        if (user.getUsername().equals(username) && user.getPassword().equals(password))
+        if (user != null &&
+                user.getUsername().equals(username) &&
+                bCryptPasswordEncoder.matches(password, user.getPassword()))
         {
             return new UsernamePasswordAuthenticationToken(
                     userService.loadUserByUsername(username),

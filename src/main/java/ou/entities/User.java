@@ -33,7 +33,7 @@ public class User extends BaseEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
         for (Role role : roles)
-            authorities.add(new SimpleGrantedAuthority(role.toString()));
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
         return authorities;
     }
 

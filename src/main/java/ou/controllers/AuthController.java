@@ -12,6 +12,7 @@ import ou.services.AuthService;
 import ou.services.UserService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping(path = "/api/auth", produces = "application/json")
@@ -27,14 +28,19 @@ public class AuthController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<LoginResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> signIn(@Valid @RequestBody LoginRequest loginRequest) {
         return authService.authenticateRequest(loginRequest);
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<Object> profile(@Valid @RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<Object> signUp(@Valid @RequestBody User user, BindingResult bindingResult) {
         if (!bindingResult.hasErrors())
             return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
         return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<User> showMe(Principal principal) {
+        return new ResponseEntity<>(userService.findByUserName(principal.getName()), HttpStatus.OK);
     }
 }

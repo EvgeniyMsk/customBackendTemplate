@@ -10,14 +10,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ou.security.CustomAuthenticationProvider;
 import ou.security.JWTAuthenticationEntryPoint;
 import ou.security.JWTAuthenticationFilter;
-import ou.services.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -29,21 +27,17 @@ import ou.services.UserService;
 public class SecurityConfig {
     private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    private final PasswordEncoder passwordEncoder;
-
     @Autowired
     private CustomAuthenticationProvider authProvider;
 
     @Autowired
-    public SecurityConfig(JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-                          PasswordEncoder passwordEncoder) {
+    public SecurityConfig(JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
@@ -68,7 +62,9 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/api/auth/signIn", "/api/auth/signUp").permitAll()
+                .antMatchers("/api/users/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

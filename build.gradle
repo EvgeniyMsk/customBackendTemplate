@@ -40,7 +40,13 @@ dependencies {
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     implementation 'org.postgresql:postgresql:42.5.0'
     // https://mvnrepository.com/artifact/org.liquibase/liquibase-core
-    implementation 'org.liquibase:liquibase-core:4.17.2'
+//    implementation 'org.liquibase:liquibase-core:4.17.2'
+
+    // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.6'
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
+
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'
